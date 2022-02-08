@@ -375,9 +375,9 @@ class OptComment(models.Model):
     comment = models.TextField(max_length=1500)
 
     # TODO: master opt sources
-    master_ls = models.CharField(max_length=150)
-    master_gaia = models.CharField(max_length=150)
-    master_ps = models.CharField(max_length=150)
+    master_ls = models.CharField(max_length=150, blank=True, null=True)
+    master_gaia = models.CharField(max_length=150, blank=True, null=True)
+    master_ps = models.CharField(max_length=150, blank=True, null=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opt_comments')
