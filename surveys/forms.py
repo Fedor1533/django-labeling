@@ -31,4 +31,4 @@ class OptCommentForm(forms.ModelForm):
 
     class Meta:
         model = OptComment
-        fields = ['comment', 'follow_up']
+        fields = ['comment']

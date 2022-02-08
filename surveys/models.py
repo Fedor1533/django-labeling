@@ -290,15 +290,14 @@ class Comment(models.Model):
         return 'Comment: {}'.format(truncated_comment.chars(10))
 
 
-# Class for optical sources
-class OptSource(models.Model):
+# TODO: full models for Optical Surveys
+# Models for Optical Surveys
+class LegacySurvey(models.Model):
     opt_id = models.PositiveIntegerField()
     name = models.CharField(max_length=150)
 
-    RA = models.DecimalField(max_digits=9, decimal_places=5)
-    DEC = models.DecimalField(max_digits=9, decimal_places=5)
-
-    ztf_name = models.CharField(max_length=100, blank=True, null=True)
+    RA = models.FloatField()
+    DEC = models.FloatField()
 
     source_class = models.CharField(
         max_length=100,
@@ -307,131 +306,84 @@ class OptSource(models.Model):
         blank=True, null=True,
     )
 
-    xray_source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name='opt_sources')
+    xray_source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name='ls_sources')
     # Status
     master_source = models.BooleanField(default=False, blank=True, null=True)
-    probable_source = models.BooleanField(default=False, blank=True, null=True)
+    probable_source = models.BooleanField(default=True, blank=True, null=True)
 
-    # Legacy Surveys attributes
-    ls_type = models.CharField(max_length=100, blank=True, null=True)
-    ls_ra = models.FloatField(blank=True, null=True)
-    ls_dec = models.FloatField(blank=True, null=True)
-    # ls_bx = models.FloatField(blank=True, null=True)
-    # ls_by = models.FloatField(blank=True, null=True)
-    # ls_ebv = models.FloatField(blank=True, null=True)
-    # ls_mjd_min = models.FloatField(blank=True, null=True)
-    # ls_mjd_max = models.FloatField(blank=True, null=True)
-    # ls_ref_cat = models.CharField(max_length=100, blank=True, null=True)
-    # ls_ref_id = models.FloatField(blank=True, null=True)
-    # ls_pmra = models.FloatField(blank=True, null=True)
-    # ls_pmdec = models.FloatField(blank=True, null=True)
-    # ls_parallax = models.FloatField(blank=True, null=True)
-    # ls_ref_epoch = models.FloatField(blank=True, null=True)
-
-    # SDSS attributes
-    # sdss_MODE = models.FloatField(blank=True, null=True)
-    # sdss_CLEAN = models.FloatField(blank=True, null=True)
-    sdss_ra = models.FloatField(blank=True, null=True)
-    sdss_dec = models.FloatField(blank=True, null=True)
-    # sdss_RAERR = models.FloatField(blank=True, null=True)
-    # sdss_DECERR = models.FloatField(blank=True, null=True)
-    # sdss_cModelFlux_u = models.FloatField(blank=True, null=True)
-    # sdss_cModelFluxIvar_u = models.FloatField(blank=True, null=True)
-    # sdss_cModelFlux_g = models.FloatField(blank=True, null=True)
-    # sdss_cModelFluxIvar_g = models.FloatField(blank=True, null=True)
-
-    # Pan-STARRS1 DR2 attributes
-    ps_raBest = models.FloatField(blank=True, null=True)
-    ps_decBest = models.FloatField(blank=True, null=True)
-    # ps_raStack = models.FloatField(blank=True, null=True)
-    # ps_decStack = models.FloatField(blank=True, null=True)
-    # ps_raStackErr = models.FloatField(blank=True, null=True)
-    # ps_decStackErr = models.FloatField(blank=True, null=True)
-    # ps_raMean = models.FloatField(blank=True, null=True)
-    # ps_decMean = models.FloatField(blank=True, null=True)
-    # ps_raMeanErr = models.FloatField(blank=True, null=True)
-    # ps_decMeanErr = models.FloatField(blank=True, null=True)
-    # ps_objInfoFlag = models.FloatField(blank=True, null=True)
-    # ps_qualityFlag = models.FloatField(blank=True, null=True)
-    # ps_primaryDetection = models.FloatField(blank=True, null=True)
-    # ps_bestDetection = models.FloatField(blank=True, null=True)
-    # ps_duplicat = models.CharField(max_length=100, blank=True, null=True)
-    # ps_d_to = models.FloatField(blank=True, null=True)
-    # ps_fitext = models.CharField(max_length=100, blank=True, null=True)
-    # ps_devaucou = models.CharField(max_length=100, blank=True, null=True)
-    # ps_star = models.CharField(max_length=100, blank=True, null=True)
-
-    # GAIA attributes
-    gaiaedr3_ra = models.FloatField(blank=True, null=True)
-    gaiaedr3_ra_error = models.FloatField(blank=True, null=True)
-    gaiaedr3_dec = models.FloatField(blank=True, null=True)
-    gaiaedr3_dec_error = models.FloatField(blank=True, null=True)
-    # gaiaedr3_parallax = models.FloatField(blank=True, null=True)
-    # gaiaedr3_parallax_error = models.FloatField(blank=True, null=True)
-    # gaiaedr3_pm = models.FloatField(blank=True, null=True)
-    # gaiaedr3_pmra = models.FloatField(blank=True, null=True)
-    # gaiaedr3_pmra_error = models.FloatField(blank=True, null=True)
-    # gaiaedr3_pmdec = models.FloatField(blank=True, null=True)
-    # gaiaedr3_pmdec_error = models.FloatField(blank=True, null=True)
-
-    # WISE attributes
-    wise_flux_w1 = models.FloatField(blank=True, null=True)
-    wise_flux_w2 = models.FloatField(blank=True, null=True)
-    wise_flux_w3 = models.FloatField(blank=True, null=True)
-    wise_flux_w4 = models.FloatField(blank=True, null=True)
+    # for master optical sources, xray_source must be linked with meta_object
+    meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='ls_sources', blank=True, null=True)
 
     def __str__(self):
-        return 'OptSource: {}'.format(self.name)
+        return 'LS: {}'.format(self.name)
 
-    # For Optical Objects Table
-    def get_survey_zip_fields(self):
-        f_list = ['comments', 'master_source', 'probable_source', 'opt_id']
-        base_fields = []
-        ls_fields = []; sdss_fields = []; ps_fields = []; gaia_fields = []; wise_fields = []
-        for field in self._meta.get_fields():
-            if field.name not in f_list:
-                if 'ls_' in field.name:
-                    ls_fields.append(field.name)
-                elif 'sdss_' in field.name:
-                    sdss_fields.append(field.name)
-                elif 'ps_'in field.name:
-                    ps_fields.append(field.name)
-                elif 'gaiaedr3_'in field.name:
-                    gaia_fields.append(field.name)
-                elif 'wise_' in field.name:
-                    wise_fields.append(field.name)
-                else:
-                    base_fields.append(field.name)
-        return zip_longest(ls_fields, sdss_fields, ps_fields, gaia_fields, wise_fields)
 
-    # For Optical Objects Table
-    def get_field_name_value(self, field_name):
-        if field_name:
-            start = field_name.find('_')+1
-            value = getattr(self, field_name, None)
-            return field_name[start:], value
-        else:
-            return (' ', ' ')
+class GAIASurvey(models.Model):
+    opt_id = models.PositiveIntegerField()
+    name = models.CharField(max_length=150)
 
-    # Return tuples for Optical Objects Table
-    def __iter__(self):
-        for field1, field2, field3, field4, field5 in self.get_survey_zip_fields():
-            yield (self.get_field_name_value(field1), self.get_field_name_value(field2), self.get_field_name_value(field3),
-                   self.get_field_name_value(field4), self.get_field_name_value(field5))
+    RA = models.FloatField()
+    DEC = models.FloatField()
+
+    source_class = models.CharField(
+        max_length=100,
+        choices=Source.CLASS_CHOICES,
+        default='NaN',
+        blank=True, null=True,
+    )
+
+    xray_source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name='gaia_sources')
+    # Status
+    master_source = models.BooleanField(default=False, blank=True, null=True)
+    probable_source = models.BooleanField(default=True, blank=True, null=True)
+
+    # for master optical sources, xray_source must be linked with meta_object
+    meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='gaia_sources', blank=True, null=True)
+
+    def __str__(self):
+        return 'GAIA: {}'.format(self.name)
+
+
+class PanSTARRS1Survey(models.Model):
+    opt_id = models.PositiveIntegerField()
+    name = models.CharField(max_length=150)
+
+    RA = models.FloatField()
+    DEC = models.FloatField()
+
+    source_class = models.CharField(
+        max_length=100,
+        choices=Source.CLASS_CHOICES,
+        default='NaN',
+        blank=True, null=True,
+    )
+
+    xray_source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name='ps1_sources')
+    # Status
+    master_source = models.BooleanField(default=False, blank=True, null=True)
+    probable_source = models.BooleanField(default=True, blank=True, null=True)
+
+    # for master optical sources, xray_source must be linked with meta_object
+    meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='ps1_sources', blank=True, null=True)
+
+    def __str__(self):
+        return 'PS1: {}'.format(self.name)
 
 
 # Class for comments on optical sources
 class OptComment(models.Model):
     comment = models.TextField(max_length=1500)
-    follow_up = models.TextField(max_length=500, blank=True, null=True)
 
-    # TODO: Status field
+    # TODO: master opt sources
+    master_ls = models.CharField(max_length=150)
+    master_gaia = models.CharField(max_length=150)
+    master_ps = models.CharField(max_length=150)
 
     created_at = models.DateTimeField(auto_now_add=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, related_name='opt_comments')
     updated_at = models.DateTimeField(blank=True, null=True)
 
-    opt_source = models.ForeignKey(OptSource, on_delete=models.CASCADE, related_name='comments')
+    source = models.ForeignKey(Source, on_delete=models.CASCADE, related_name='opt_comments')
 
     def __str__(self):
         truncated_comment = Truncator(self.comment)

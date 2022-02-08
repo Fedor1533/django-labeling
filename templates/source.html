@@ -150,115 +150,23 @@
     <div class="opticalSurveys">
 
         <ul class="nav nav-tabs" id="myTab">
-            {% for opt_source in source.opt_sources.all %}
-                {% if opt_source.opt_id == 1 %}
-                    {% define "active" as status %}
-                {% else %}
-                    {% define "" as status %}
-                {% endif %}
-                <li class="nav-item">
-                    <a href="#object{{ opt_source.opt_id }}" class="nav-link {{ status }}" data-toggle="tab">Object{{ opt_source.opt_id }}</a>
-                </li>
-            {% endfor %}
         </ul>
         <div class="tab-content">
-            {% for opt_source in source.opt_sources.all %}
-                {% if opt_source.opt_id == 1 %}
-                    {% define "fade show active" as status %}
-                {% else %}
-                    {% define "fade" as status %}
-                {% endif %}
-
-                {%  comment %} Optical Source table {% endcomment %}
-
-                <div class="tab-pane {{ status }}" id="object{{ opt_source.opt_id }}">
-                    <div class="table_opt_source">
-                        <table class="table table-bordered table-responsive">
-                            <thead class="thead-dark p-0 m-0">
-                                <tr>
-                                    {% for opt_s in opt_surveys %}
-                                        <th class="text-center" rowspan="1" colspan="2" >
-                                            {{ opt_s }}
-                                        </th>
-                                    {% endfor %}
-                                </tr>
-                                <tr>
-                                    {% for opt_s in opt_surveys %}
-                                        <th class="text-center">name</th>
-                                        <th class="text-center">value</th>
-                                    {% endfor %}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for field_val1,field_val2,field_val3,field_val4,field_val5 in opt_source %}
-                                    <tr>
-                                        <th scope="row">{{ field_val1.0 }}</th>
-                                        <td>{{ field_val1.1 }}</td>
-                                        <th scope="row">{{ field_val2.0 }}</th>
-                                        <td>{{ field_val2.1 }}</td>
-                                        <th scope="row">{{ field_val3.0 }}</th>
-                                        <td>{{ field_val3.1 }}</td>
-                                        <th scope="row">{{ field_val4.0 }}</th>
-                                        <td>{{ field_val4.1 }}</td>
-                                        <th scope="row">{{ field_val5.0 }}</th>
-                                        <td>{{ field_val5.1 }}</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
 
                     {%  comment %} Optical Comment form {% endcomment %}
                     <div class = "opt_comment_section">
-                        {%  comment %} add 'novalidate' when learn why widget_tweaks doesnt show errors {% endcomment %}
-                        <form id="opt_comment_form" method="post">
-                            {% with opt_form as form %}
-                                {% csrf_token %}
-                                {% include 'includes/form.html' %}
-                            {% endwith %}
-                            <input id="opt_com_field" type="hidden" name="opt_source_id" value={{ opt_source.opt_id }}>
-                            <button type="submit" class="btn btn-success" value="button" name="opt_comment">Create/Edit</button>
-                        </form>
                     </div>
 
                     {%  comment %} List of comments for this source {% endcomment %}
                     <div class="comments" style="width: 30rem;">
-                        {% with opt_source as source %}
-                            {% include 'includes/list_comments.html' %}
-                        {% endwith %}
+
                     </div>
 
-                </div>
-            {% endfor %}
 
             {% comment %} General Aladin Lite {% endcomment %}
             {% if source.opt_sources.all %}
                 <div class="aladin_lite">
-                    {% comment %} Aladin Lite container at requested dimensions {% endcomment %}
-                    <div id="aladin-lite-div" style="width:700px;height:400px;"></div>
-                    <script type="text/javascript" src="https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js" charset="utf-8"></script>
 
-                    {% comment %} Radio buttons with surveys {% endcomment %}
-                    <input id="SDSS9" type="radio" name="survey" value="P/SDSS9/color" checked><label for="SDSS9">SDSS9 color</label>
-                    <input id="PS_DR1" type="radio" name="survey" value="P/PanSTARRS/DR1/color-i-r-g"><label for="PS_DR1">PS_DR1 color</label>
-                    <input id="GAIAedr3" type="radio" name="survey" value="P/DM/flux-Bp/I/350/gaiaedr3"><label for="GAIAedr3">gaiaedr3</label>
-                    <input id="allwise" type="radio" name="survey" value="P/allWISE/color"><label for="allwise">AllWISE</label>
-
-                    {% comment %} Creation of Aladin Lite instance {% endcomment %}
-                    <script type="text/javascript">
-                        var aladin = A.aladin('#aladin-lite-div', {survey: "P/DSS2/color", fov:0.5, target: "{{ source.RA }} {{ source.DEC }}"});
-                        $('input[name=survey]').change(function() {
-                            aladin.setImageSurvey($(this).val());
-                        });
-
-                        var markers = A.catalog({name: 'Some markers'})
-                        aladin.addCatalog(markers);
-                        {% for opt_s in source.opt_sources.all %}
-                            markers.addSources([A.marker({{ opt_s.ls_ra }}, {{ opt_s.ls_dec }}, {popupTitle: '{{opt_s.name}}',
-                                popupDesc: '<em>RA:</em> {{ opt_s.ls_ra }} <br/><em>DEC:</em> {{ opt_s.ls_dec }} <br/>\
-                                    <em><class:</em> {{ opt_s.ls_type }} <br/>More info <a target="_blank" href="#">in Simbad</a>'})]);
-                        {% endfor %}
-                    </script>
                 </div>
             {% endif %}
 
@@ -266,4 +174,4 @@
 
     </div>
 
-{% endblock %}
+{% endblock content %}

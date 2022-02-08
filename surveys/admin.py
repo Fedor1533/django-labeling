@@ -58,31 +58,36 @@ class CustomSourceAdmin(ImportMixin, admin.ModelAdmin):
 
 
 # Optical Sources
-class OptSourceResource(resources.ModelResource):
-    # get ForeignKey as XRay Source name in csv table
-    xray_source = Field(
-        column_name='name',
-        attribute='xray_source',
-        widget=ForeignKeyWidget(Source, 'name'))
+# class OptSourceResource(resources.ModelResource):
+#     # get ForeignKey as XRay Source name in csv table
+#     xray_source = Field(
+#         column_name='name',
+#         attribute='xray_source',
+#         widget=ForeignKeyWidget(Source, 'name'))
+#
+#     class Meta:
+#         model = OptSource
+#         import_id_fields = ('opt_id', 'name', 'RA', 'DEC',  'ls_ra', 'ls_dec')  # TODO: change this list(ls_ra, ls_dec)?
+#         exclude = ('id',)
+#         skip_unchanged = True
+#         report_skipped = True
 
-    class Meta:
-        model = OptSource
-        import_id_fields = ('opt_id', 'name', 'RA', 'DEC',  'ls_ra', 'ls_dec')  # TODO: change this list(ls_ra, ls_dec)?
-        exclude = ('id',)
-        skip_unchanged = True
-        report_skipped = True
 
-
-class CustomOptSourceAdmin(ImportMixin, admin.ModelAdmin):
-    resource_class = OptSourceResource
+# class CustomOptSourceAdmin(ImportMixin, admin.ModelAdmin):
+#     resource_class = OptSourceResource
 
 
 admin.site.register(MetaObject)
 admin.site.register(MetaSource)
+
 admin.site.register(Survey)
 admin.site.register(Comment)
+
+admin.site.register(LegacySurvey)
+admin.site.register(GAIASurvey)
+admin.site.register(PanSTARRS1Survey)
 admin.site.register(OptComment)
 
-admin.site.register(OptSource, CustomOptSourceAdmin)
+# admin.site.register(OptSource, CustomOptSourceAdmin)
 admin.site.register(Source, CustomSourceAdmin)
 

@@ -20,7 +20,7 @@ def source(request, pk):
     postfixes = ['_e1', '_e2', '_e3', '_e4', '_e5', '_e6', '_e7', '_e8']
     base_fields = [field.name for field in Source._meta.get_fields() if not field.name[-3:] in postfixes]
 
-    opt_surveys = ['Legacy Survey', 'SDSS', 'Pan-STARRS', 'GAIA', 'WISE']
+    opt_surveys = ['Legacy Survey', 'SDSS', 'Pan-STARRS1', 'GAIA', 'WISE']
 
     surveys = get_list_or_404(Survey)
     prim_source = get_object_or_404(Source, pk=pk)  # get object-source chosen by user on main page
@@ -59,23 +59,23 @@ def source(request, pk):
             return redirect('source', pk=prim_source.pk)
 
         # Create/Edit comment for OPTICAL OBJECT
-        elif 'opt_comment' in request.POST:
-            opt_id = request.POST.get('opt_source_id')
-            opt_source = get_object_or_404(OptSource, opt_id=opt_id, name=prim_source.name)
-            # Edit existing comment or create new one
-            try:
-                opt_comment = OptComment.objects.get(opt_source=opt_source, created_by=request.user)
-                opt_comment.updated_at = datetime.now()
-            except OptComment.DoesNotExist:
-                opt_comment = OptComment.objects.create(comment='create', opt_source=opt_source,
-                                                        created_by=request.user)
-
-            opt_form = OptCommentForm(request.POST, instance=opt_comment)
-            if opt_form.is_valid():
-                opt_form.save()
-                opt_comment.save()
-
-            return redirect('source', pk=prim_source.pk)
+        # elif 'opt_comment' in request.POST:
+        #     opt_id = request.POST.get('opt_source_id')
+        #     opt_source = get_object_or_404(OptSource, opt_id=opt_id, name=prim_source.name)
+        #     # Edit existing comment or create new one
+        #     try:
+        #         opt_comment = OptComment.objects.get(opt_source=opt_source, created_by=request.user)
+        #         opt_comment.updated_at = datetime.now()
+        #     except OptComment.DoesNotExist:
+        #         opt_comment = OptComment.objects.create(comment='create', opt_source=opt_source,
+        #                                                 created_by=request.user)
+        #
+        #     opt_form = OptCommentForm(request.POST, instance=opt_comment)
+        #     if opt_form.is_valid():
+        #         opt_form.save()
+        #         opt_comment.save()
+        #
+        #     return redirect('source', pk=prim_source.pk)
 
     else:
         # create form for xray source
