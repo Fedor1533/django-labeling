@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from itertools import zip_longest
 from django.db.models import Max
 
+import numpy as np
+
 
 # Class for files from where the xray sources were loaded
 class MetaSource(models.Model):
@@ -261,10 +263,23 @@ class Source(models.Model):
     def get_last_comment(self):
         return Comment.objects.filter(source=self).order_by('-created_at').first()
 
+    def get_opt_survey_sources(self, survey_name):
+        if survey_name == 'LS':
+            opt_sources = self.ls_sources.all()
+            return opt_sources if opt_sources.exists() else None
+
+        elif survey_name == 'GAIA':
+            opt_sources = self.gaia_sources.all()
+            return opt_sources if opt_sources.exists() else None
+
+        if survey_name == 'PS1':
+            opt_sources = self.ps1_sources.all()
+            return opt_sources if opt_sources.exists() else None
+
     def __iter__(self):
         for field in Survey.get_fields_to_show():
             value = getattr(self, field, None)
-            yield (field, value)
+            yield field, value
 
 
 # Class for comments on xray sources
@@ -291,8 +306,8 @@ class Comment(models.Model):
 
 
 # TODO: full models for Optical Surveys
-# Models for Optical Surveys
-class LegacySurvey(models.Model):
+# Models for DESI Legacy Imaging Surveys sources
+class LS(models.Model):
     opt_id = models.PositiveIntegerField()
     name = models.CharField(max_length=150)
 
@@ -317,8 +332,17 @@ class LegacySurvey(models.Model):
     def __str__(self):
         return 'LS: {}'.format(self.name)
 
+    def __iter__(self):
+        for field in LS._meta.get_fields():
+            value = getattr(self, field.name, None)
+            yield field.name, value
 
-class GAIASurvey(models.Model):
+    class Meta:
+        verbose_name_plural = "Legacy Surveys"
+
+
+# Models for GAIA sources
+class GAIA(models.Model):
     opt_id = models.PositiveIntegerField()
     name = models.CharField(max_length=150)
 
@@ -343,8 +367,17 @@ class GAIASurvey(models.Model):
     def __str__(self):
         return 'GAIA: {}'.format(self.name)
 
+    def __iter__(self):
+        for field in GAIA._meta.get_fields():
+            value = getattr(self, field.name, None)
+            yield field.name, value
 
-class PanSTARRS1Survey(models.Model):
+    class Meta:
+        verbose_name_plural = "GAIA"
+
+
+# Models for Pan-STARRS1 DR2 sources
+class PS1(models.Model):
     opt_id = models.PositiveIntegerField()
     name = models.CharField(max_length=150)
 
@@ -368,6 +401,14 @@ class PanSTARRS1Survey(models.Model):
 
     def __str__(self):
         return 'PS1: {}'.format(self.name)
+
+    def __iter__(self):
+        for field in PS1._meta.get_fields():
+            value = getattr(self, field.name, None)
+            yield field.name, value
+
+    class Meta:
+        verbose_name_plural = "Pan-STARRS1"
 
 
 # Class for comments on optical sources

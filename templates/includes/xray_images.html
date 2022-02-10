@@ -7,7 +7,7 @@
     <div class = "trans_image">
         {% with file_name=source.meta_data.file_name|to_str num=source.row_num|to_str%}
             <img src="{% static 'images/e'|add:survey|add:'/'|add:'trans_'|add:file_name|add:num|add:'.png'|file_exists%}"
-                                                                        width="300px" height="300px"/>
+                                                                        width="330px" height="330px"/>
         {% endwith %}
     </div>
 

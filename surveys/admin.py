@@ -83,9 +83,9 @@ admin.site.register(MetaSource)
 admin.site.register(Survey)
 admin.site.register(Comment)
 
-admin.site.register(LegacySurvey)
-admin.site.register(GAIASurvey)
-admin.site.register(PanSTARRS1Survey)
+admin.site.register(LS)
+admin.site.register(GAIA)
+admin.site.register(PS1)
 admin.site.register(OptComment)
 
 # admin.site.register(OptSource, CustomOptSourceAdmin)

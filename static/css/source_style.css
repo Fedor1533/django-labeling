@@ -31,7 +31,7 @@
 {
     position: absolute;
     margin: 10px;
-    right:50%;
+    right:45%;
     top: 0px;
 }
 .light_curve
@@ -86,7 +86,7 @@
 {
     position: absolute;
     right:42%;
-    top: 90%;
+    top: 85%;
 }
 
 /* This is for OPTICAL SURVEYS */
@@ -99,26 +99,49 @@
 
 .table_opt_source
 {
-    margin: 20px;
-    width: 45%;
-    height: 400px;
+    margin: 10px;
+    width: 25%;
+    height: 600px;
     overflow:auto;
+}
+
+.opt_comment_section
+{
+    margin: 10px;
+    width: 300px;
+    height: 200px;
+}
+
+.opt_comments
+{
+    position: absolute;
+    right:35%;
+    top: 57%;
+}
+
+/* This is for two buttons ('Master' 'Probable') next to each other */
+/* TODO: think about ('Master' 'Probable') buttons location!!! */
+#opt_form-wrapper
+{
+    position: absolute;
+    margin-left: 11%;
+    top: 92.5%;
+}
+#opt_master_form
+{
+    display: inline-block;
+}
+#opt_probable_form
+{
+    display: inline-block;
 }
 
 .aladin_lite
 {
     position: absolute;
-    top: 20px;
-    margin: 40px;
-    right: 150px;
-    width: 35%;
+    top: 6%;
+    right: 20%;
 }
 
-.opt_comment_section
-{
-    margin: 20px;
-    width: 300px;
-    height: 200px;
-}
 
 
