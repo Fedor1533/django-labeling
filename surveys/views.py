@@ -55,6 +55,20 @@ def handle_comment_request(request, prim_source, opt_sources):
             opt_comment.save()
 
 
+def change_meta_obj_opt_ref(meta_obj, opt_survey, new_value):
+    if opt_survey == 'LS':
+        meta_obj.ls_source = new_value
+        meta_obj.save()
+
+    elif opt_survey == 'GAIA':
+        meta_obj.gaia_source = new_value
+        meta_obj.save()
+
+    if opt_survey == 'PS1':
+        meta_obj.ps_source = new_value
+        meta_obj.save()
+
+
 def handle_status_request(request, prim_source, opt_dict):
     # Make 'master' source-object or normal
     if 'master' in request.POST and request.user.is_superuser:
@@ -75,17 +89,17 @@ def handle_status_request(request, prim_source, opt_dict):
         opt_source_type = request.POST.get('opt_source_type')
         # get requested source and change its 'master' status
         opt_source = opt_dict[opt_source_type].get(pk=opt_source_id)
-        # update all opt sources from same survey and same xray source
+        # TODO: update all opt sources from same survey and same xray source
         if opt_source.master_source:
             opt_source.master_source = False
-            opt_source.meta_object = None
+            change_meta_obj_opt_ref(prim_source.meta_object, opt_source_type, None)
             opt_source.save()
         else:
             opt_source.master_source = True
-            opt_source.meta_object = prim_source.meta_object  # important to make this link
+            change_meta_obj_opt_ref(prim_source.meta_object, opt_source_type, opt_source)  # important to make this link
             opt_source.save()
             # TODO: think about this update
-            opt_dict[opt_source_type].exclude(pk=opt_source_id).update(master_source=False, meta_object=None)
+            opt_dict[opt_source_type].exclude(pk=opt_source_id).update(master_source=False)
 
     # Make optical source 'probable' or normal for xray source
     elif 'probable_master' in request.POST and request.user.is_superuser:

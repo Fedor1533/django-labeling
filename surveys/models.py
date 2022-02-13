@@ -23,6 +23,11 @@ class MetaObject(models.Model):
     unchange_flag = models.BooleanField(default=False, blank=True, null=True)
     description = models.TextField(max_length=500, blank=True, null=True)  # Maybe dont need it
 
+    # for master optical sources from different surveys
+    ls_source = models.ForeignKey('LS', on_delete=models.CASCADE, related_name='meta_objects', blank=True, null=True)
+    gaia_source = models.ForeignKey('GAIA', on_delete=models.CASCADE, related_name='meta_objects', blank=True, null=True)
+    ps_source = models.ForeignKey('PS1', on_delete=models.CASCADE, related_name='meta_objects', blank=True, null=True)
+
     def __str__(self):
         return 'MetaObject: {}'.format(self.master_name)
 
@@ -327,7 +332,7 @@ class LS(models.Model):
     probable_source = models.BooleanField(default=True, blank=True, null=True)
 
     # for master optical sources, xray_source must be linked with meta_object
-    meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='ls_sources', blank=True, null=True)
+    # meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='ls_sources', blank=True, null=True)
 
     def __str__(self):
         return 'LS: {}'.format(self.name)
@@ -362,7 +367,7 @@ class GAIA(models.Model):
     probable_source = models.BooleanField(default=True, blank=True, null=True)
 
     # for master optical sources, xray_source must be linked with meta_object
-    meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='gaia_sources', blank=True, null=True)
+    # meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='gaia_sources', blank=True, null=True)
 
     def __str__(self):
         return 'GAIA: {}'.format(self.name)
@@ -397,7 +402,7 @@ class PS1(models.Model):
     probable_source = models.BooleanField(default=True, blank=True, null=True)
 
     # for master optical sources, xray_source must be linked with meta_object
-    meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='ps1_sources', blank=True, null=True)
+    # meta_object = models.ForeignKey(MetaObject, on_delete=models.CASCADE, related_name='ps1_sources', blank=True, null=True)
 
     def __str__(self):
         return 'PS1: {}'.format(self.name)
